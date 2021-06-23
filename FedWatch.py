@@ -1,11 +1,11 @@
 from SOMA.soma import SOMA
+from TOMO.tomo import TOMO
 import pandas as pd
 
 """
-    Commands:
+    System Open Market Operations:
 
-        - SOMA:
-
+        - Commands:
             - "soma_hist()" = Returns Pandas DataFrame of
                               historical SOMA portfolio Summary.
 
@@ -60,3 +60,14 @@ def soma_agencies():
 
 def soma_cmbs():
     return SOMA.CMBS()
+
+"""
+    Temporary Open Market Operations:
+        
+        -Commands:
+            - "recent_rp()" = Returns a dictionary of data
+                              on recent Repo Operations.
+"""
+
+def tomo_rp():
+    return TOMO.recent_rp()

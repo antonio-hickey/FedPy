@@ -67,7 +67,14 @@ def soma_cmbs():
         -Commands:
             - "recent_rp()" = Returns a dictionary of data
                               on recent Repo Operations.
+            - "recent_rrp()" = Returns a dictionary of data
+                                on recent Reverse Repo Operations.
 """
 
 def tomo_rp():
     return TOMO.recent_rp()
+
+def tomo_rrp():
+     return TOMO.recent_rrp()
+
+

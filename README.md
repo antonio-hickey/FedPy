@@ -15,9 +15,9 @@ related to Federal Reserve and integrating for your own use.
 - Get current TOMO portfolio value
 
 ## Installation
-Install using pip:
+Install using pip3:
 
 
 ```sh
-pip install FedPy
+pip3 install FedPy
 ```

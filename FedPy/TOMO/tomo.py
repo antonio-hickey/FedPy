@@ -11,7 +11,7 @@ Output Data:
 """
 
 # Import Modules
-from utils.date_handler import DatesHandler as datesHand
+from .utils.date_handler import DatesHandler as datesHand
 from bs4 import BeautifulSoup as bs
 import requests as req
 

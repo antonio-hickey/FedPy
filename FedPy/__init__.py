@@ -1,5 +1,5 @@
-from SOMA.soma import SOMA
-from TOMO.tomo import TOMO
+from .SOMA.soma import SOMA
+from .TOMO.tomo import TOMO
 import pandas as pd
 
 """
@@ -76,5 +76,7 @@ def tomo_rp():
 
 def tomo_rrp():
      return TOMO.recent_rrp()
+
+
 
 

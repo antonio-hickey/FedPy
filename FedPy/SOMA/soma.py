@@ -684,7 +684,7 @@ class SOMA:
         return df
 
     def Hist():
-        df = pd.read_csv('https://raw.githubusercontent.com/antonio-hickey/FedWatch/main/data/soma_historical.csv')
+        df = pd.read_csv('https://raw.githubusercontent.com/antonio-hickey/FedPy/main/FedPy/data/soma_historical.csv')
         return df
 
     

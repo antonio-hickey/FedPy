@@ -3,7 +3,7 @@
  - #### FRED Commmands:
     - `FedPy.fred(api_key, series_id, *start, *end)`: Returns Pandas Dataframe
                                                    of any FRED dataset, but requires
-                                                   the inputs of data series id and api key.
+                                                   the inputs of data series id and api key. (API Key is free @ https://research.stlouisfed.org/useraccount/apikeys)
                                                 
 
  - #### SOMA Commands:

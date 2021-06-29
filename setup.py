@@ -8,7 +8,7 @@ classifiers = [
 
 setup(
  name='FedPy',
- version='1.0.2',
+ version='1.1.0',
  description='Seamlessly extract official Federal Reserve data for your own use.',
  lang_descrip=open('README.md').read() + '\n\n' + open('CHANGELOG.txt').read(),
  url='https://github.com/antonio-hickey/FedPy',
@@ -19,6 +19,7 @@ setup(
  keywords=['Federal Reserve', 'Economics', 'Finance'],
  packages = find_packages(),
  install_requires=[
+         'wheel',
          'beautifulsoup4',
          'lxml',
          'pandas',

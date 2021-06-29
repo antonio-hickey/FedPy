@@ -1,7 +1,7 @@
 # FedPy
 ## _Everything Federal Reserve Related_
 
-Open source python package for seamlessly extracting data 
+Open source python package for seamlessly pulling data 
 related to Federal Reserve and integrating for your own use.
 
 Depending on the data you're trying to access FedPy will

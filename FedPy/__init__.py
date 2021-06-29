@@ -1,5 +1,6 @@
 from .SOMA.soma import SOMA
 from .TOMO.tomo import TOMO
+from .FRED.fred import Fred
 import pandas as pd
 
 """
@@ -64,7 +65,7 @@ def soma_cmbs():
 """
     Temporary Open Market Operations:
         
-        -Commands:
+        - Commands:
             - "recent_rp()" = Returns a dictionary of data
                               on recent Repo Operations.
             - "recent_rrp()" = Returns a dictionary of data
@@ -78,5 +79,18 @@ def tomo_rrp():
      return TOMO.recent_rrp()
 
 
+"""
+    Federal Reserve Economic Data:
 
+        - Commands:
+            - "fred(key, series_id, *start, *end)" = Returns a pandas DataFrame of any
+                                                     FRED dataset, but requires the inputs
+                                                     data series id, and your free api key.
+"""
+
+def fred(key, series_id, start=None, end=None):
+        fred = Fred(api_key=key)
+        data = fred.get_series(series_id)
+
+        return data
 

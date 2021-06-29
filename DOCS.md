@@ -1,5 +1,11 @@
 ## Commands:
 
+ - #### FRED Commmands:
+    - `FedPy.fred(api_key, series_id, *start, *end)`: Returns Pandas Dataframe
+                                                   of any FRED dataset, but requires
+                                                   the inputs of data series id and api key.
+                                                
+
  - #### SOMA Commands:
     - `FedPy.soma_hist()`: Returns Pandas DataFrame of
                   historical SOMA portfolio Summary.

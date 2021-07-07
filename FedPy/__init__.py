@@ -1,6 +1,7 @@
 from .SOMA.soma import SOMA
 from .TOMO.tomo import TOMO
 from .FRED.fred import Fred
+from .FOMC_Statement.statements import Transcripts
 import pandas as pd
 
 """
@@ -68,6 +69,7 @@ def soma_cmbs():
         - Commands:
             - "recent_rp()" = Returns a dictionary of data
                               on recent Repo Operations.
+
             - "recent_rrp()" = Returns a dictionary of data
                                 on recent Reverse Repo Operations.
 """
@@ -94,3 +96,13 @@ def fred(key, series_id, start=None, end=None):
 
         return data
 
+"""
+    FOMC Statements:
+
+        - Commands:
+            - "fomc_statements()" = Returns a pandas DataFrame of historic
+                                    FOMC statements going back to 2006 to today.
+"""
+
+def fomc_statements():
+    return Transcripts.hist_fomc_statements()

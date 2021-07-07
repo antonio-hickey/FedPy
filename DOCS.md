@@ -3,9 +3,13 @@
  - #### FRED Commmands:
     - `FedPy.fred(api_key, series_id, *start, *end)`: Returns Pandas Dataframe
                                                    of any FRED dataset, but requires
-                                                   the inputs of data series id and api key. (API Key is free @ https://research.stlouisfed.org/useraccount/apikeys)
-                                                
+                                                   the inputs of data series id and api key.
+                                                   (API Key is free @ https://research.stlouisfed.org/useraccount/apikeys)
 
+ - #### FOMC Statement Command:
+    - `FedPy.fomc_statements()`: Returns Pandas DataFrame of historic
+                              FOMC statements from 2006 to today
+                              
  - #### SOMA Commands:
     - `FedPy.soma_hist()`: Returns Pandas DataFrame of
                   historical SOMA portfolio Summary.

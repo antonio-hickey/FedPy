@@ -14,8 +14,12 @@ Change Log
 - Added documentation
 - Updated Readme
 
-
 1.1.0 (06/29/2021)
 ------------------
 - Added FRED API
+- Updated documentation
+
+1.1.5 (07/07/2021)
+------------------
+- Added FOMC Statements
 - Updated documentation

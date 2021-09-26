@@ -33,7 +33,7 @@ class SOMA:
        Output's a dictionary summary
        of the current SOMA portfolio.
     """
-    def Summary():
+    def Summary() -> dict:
 
         """ 
             Dynamic URL to always get most recent data
@@ -112,7 +112,7 @@ class SOMA:
        Output's a float of the
        total current SOMA portfolio. 
     """
-    def Total():
+    def Total() -> float:
 
         """ 
             Dynamic URL to always get most recent data
@@ -160,7 +160,7 @@ class SOMA:
        Outputs a DataFrame of 
        current SOMA bill holdings.
     """
-    def Bills():
+    def Bills() -> pd.DataFrame:
 
         """ 
             Dynamic URL to always get most recent data
@@ -246,7 +246,7 @@ class SOMA:
        Outputs a DataFrame of current 
        SOMA notes & bobnds holdings.
     """
-    def NotesBonds():
+    def NotesBonds() -> pd.DataFrame:
 
         """ 
             Dynamic URL to always get most recent data
@@ -335,7 +335,7 @@ class SOMA:
        Outputs a DataFrame of current 
        SOMA TIPS holdings.
     """
-    def TIPS():
+    def TIPS() -> pd.DataFrame:
 
         """ 
             Dynamic URL to always get most recent data
@@ -427,7 +427,7 @@ class SOMA:
        Outputs a DataFrame of current 
        SOMA FRNs holdings.
     """
-    def FRNs():
+    def FRNs() -> pd.DataFrame:
 
         """ 
             Dynamic URL to always get most recent data
@@ -516,7 +516,7 @@ class SOMA:
        Outputs a DataFrame of current 
        SOMA Agency Debts holdings.
     """
-    def AgencyDebts():
+    def AgencyDebts() -> pd.DataFrame:
 
         """ 
             Dynamic URL to always get most recent data
@@ -606,7 +606,7 @@ class SOMA:
        Outputs a DataFrame of current 
        SOMA Agency Debts holdings.
     """
-    def CMBS():
+    def CMBS() -> pd.DataFrame:
 
         """ 
             Dynamic URL to always get most recent data
@@ -683,7 +683,7 @@ class SOMA:
         # Return the DataFrame
         return df
 
-    def Hist():
+    def Hist() -> pd.DataFrame:
         df = pd.read_csv('https://raw.githubusercontent.com/antonio-hickey/FedPy/main/FedPy/data/soma_historical.csv')
         return df
 

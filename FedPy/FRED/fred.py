@@ -2,9 +2,12 @@
     Modified version of FRED api 
     Credits to: Mortada, for original version (https://github.com/mortada/fredapi) 
 """
+from datetime import datetime
 import os
 import sys
 import xml.etree.ElementTree as ET
+
+from pandas.core.tools.datetimes import to_datetime
 if sys.version_info[0] >= 3:
     import urllib.request as url_request
     import urllib.parse as url_parse
@@ -15,6 +18,8 @@ else:
     import urllib2 as url_error
 
 import pandas as pd
+
+from typing import Optional
 
 urlopen = url_request.urlopen
 quote_plus = url_parse.quote_plus
@@ -29,9 +34,8 @@ class Fred(object):
     max_results_per_request = 1000
     root_url = 'https://api.stlouisfed.org/fred'
 
-    def __init__(self,
-                 api_key=None,
-                 api_key_file=None):
+    def __init__(self, api_key: Optional[str]=None, 
+                 api_key_file: Optional[str]=None) -> None:
         """
         Initialize the Fred class that provides useful functions to query the Fred dataset. You need to specify a valid
         API key in one of 3 ways: pass the string via api_key, or set api_key_file to a file with the api key in the
@@ -58,7 +62,7 @@ class Fred(object):
                     api key. You can sign up for a free api key on the Fred
                     website at http://research.stlouisfed.org/fred2/"""))
 
-    def __fetch_data(self, url):
+    def __fetch_data(self, url: str) -> ET.Element:
         """
         helper function for fetching data given a request URL
         """
@@ -71,7 +75,7 @@ class Fred(object):
             raise ValueError(root.get('message'))
         return root
 
-    def _parse(self, date_str, format='%Y-%m-%d'):
+    def _parse(self, date_str: str, format: Optional[str]='%Y-%m-%d') -> datetime.datetime:
         """
         helper function for parsing FRED date string into datetime
         """
@@ -80,12 +84,12 @@ class Fred(object):
             rv = rv.to_pydatetime()
         return rv
 
-    def get_series(self, series_id, start=None, end=None):
+    def get_series(self, series_id: str, start: Optional[str]=None, 
+                   end: Optional[str]=None) -> pd.Series:
         url = "%s/series/observations?series_id=%s" % (self.root_url, series_id)
         
         if start is not None:
-            start = pd.to_datetime(start,
-                                               errors='raise')
+            start = pd.to_datetime(start, errors='raise')
             url += '&observation_start=' + start.strftime('%Y-%m-%d')
         
         if end is not None:

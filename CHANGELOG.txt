@@ -23,3 +23,9 @@ Change Log
 ------------------
 - Added FOMC Statements
 - Updated documentation
+
+1.1.6 (09/26/2021)
+------------------
+- Added Flake8, MyPy, iSort Linters
+  via pre-commit.
+- Added Type Hints

@@ -21,7 +21,7 @@ class TOMO:
         Returns a dictionary with data on most recent
         repo operations by the Federal Reserve.
     """    
-    def recent_rp():
+    def recent_rp() -> dict:
         if (int(datesHand.time()[:2])) > 14:
             URL = "https://websvcgatewayx2.frbny.org/autorates_tomo_external/services/v1_0/tomo/retrieveXml"
         else:
@@ -65,7 +65,7 @@ class TOMO:
         Returns a dictionary of most
         recent Reverse Repo Operations.
     """
-    def recent_rrp():
+    def recent_rrp() -> dict:
         if (int(datesHand.time()[:2])) > 14:
             URL = "https://websvcgatewayx2.frbny.org/autorates_tomo_external/services/v1_0/tomo/retrieveXml"
         else:

@@ -1,3 +1,4 @@
+from typing import Optional
 from .SOMA.soma import SOMA
 from .TOMO.tomo import TOMO
 from .FRED.fred import Fred
@@ -36,31 +37,31 @@ import pandas as pd
                               current CMBS in SOMA portfolio.
 """
 
-def soma_hist():
+def soma_hist() -> pd.DataFrame:
     return SOMA.Hist()
 
-def soma():
+def soma() -> pd.DataFrame:
     return SOMA.Summary()
 
-def soma_total():
+def soma_total() -> float:
     return SOMA.Total()
 
-def soma_bills():
+def soma_bills() -> pd.DataFrame:
     return SOMA.Bills()
 
-def soma_notesbonds():
+def soma_notesbonds() -> pd.DataFrame:
     return SOMA.NotesBonds()
 
-def soma_tips():
+def soma_tips() -> pd.DataFrame:
     return SOMA.TIPS()
 
-def soma_frn():
+def soma_frn() -> pd.DataFrame:
     return SOMA.FRNs()
 
-def soma_agencies():
+def soma_agencies() -> pd.DataFrame:
     return SOMA.AgencyDebts()
 
-def soma_cmbs():
+def soma_cmbs() -> pd.DataFrame:
     return SOMA.CMBS()
 
 """
@@ -74,10 +75,10 @@ def soma_cmbs():
                                 on recent Reverse Repo Operations.
 """
 
-def tomo_rp():
+def tomo_rp() -> dict:
     return TOMO.recent_rp()
 
-def tomo_rrp():
+def tomo_rrp() -> dict:
      return TOMO.recent_rrp()
 
 
@@ -90,7 +91,8 @@ def tomo_rrp():
                                                      data series id, and your free api key.
 """
 
-def fred(key, series_id, start=None, end=None):
+def fred(key: str, series_id: str, start: Optional[str]=None,
+         end: Optional[str]=None) -> pd.DataFrame:
         fred = Fred(api_key=key)
         data = fred.get_series(series_id)
 
@@ -104,5 +106,5 @@ def fred(key, series_id, start=None, end=None):
                                     FOMC statements going back to 2006 to today.
 """
 
-def fomc_statements():
+def fomc_statements() -> pd.DataFrame:
     return Transcripts.hist_fomc_statements()

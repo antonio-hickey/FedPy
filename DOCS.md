@@ -9,10 +9,10 @@
  - #### FOMC Statement Command:
     - `FedPy.Transcripts().historic()`: Returns Pandas DataFrame of historic
                                         FOMC statements from 2006 to today.
-    
+
     - `FedPy.Transcripts().latest()`: Returns Pandas Series of the latest
                                       FOMC statement.
-    
+
     - `FedPy.Transcripts().previous()`: Returns Pandas Series of the previous
                                         FOMC statement.
 
@@ -47,6 +47,6 @@
  - #### TOMO Commands:
     - `FedPy.TOMO().repo()`: Returns a dictionary of data on
                              most recent Repo Operation.
-    
+
     -  `FedPy.TOMO().reverse_repo()`: Returns a dictionary of data on
                                       most recent Reverse Repo Operation.

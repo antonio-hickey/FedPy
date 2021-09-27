@@ -1,11 +1,11 @@
 # FedPy
 ## _Everything Federal Reserve Related_
 
-Open source python package for seamlessly pulling data 
-related to Federal Reserve and integrating for your own use.
+Open source python package for pulling data related
+to Federal Reserve and seamlessly integrating for your own use.
 
 Depending on the data you're trying to access FedPy will
-return a `pandas DataFrame` or a `Dictionary`.
+return a `pandas DataFrame`, `Dictionary`, or a `float`.
 
 ## Installation:
 Install using pip:
@@ -18,8 +18,7 @@ pip install FedPy
 ## Basic Usage Example:
 ```
 import FedPy
-soma_bill_holdings = FedPy.soma_hist()
-soma_bill_holdings.tail()
+soma_bill_holdings = FedPy.SOMA().bills()
 ```
 ##### This returns:
 
@@ -34,4 +33,4 @@ Date        MBS           CMBS        ...    Notes & Bonds  Bills         Agenci
 
 
 
-## For more information check out the [Documentation](https://github.com/antonio-hickey/FedPy/blob/main/DOCS.md).. 
+## For more information check out the [Documentation](https://github.com/antonio-hickey/FedPy/blob/main/DOCS.md)..

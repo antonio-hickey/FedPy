@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 classifiers = [
     'Development Status :: 2 - Pre-Alpha',
@@ -17,7 +17,7 @@ setup(
  license='MIT',
  classifiers=classifiers,
  keywords=['Federal Reserve', 'Economics', 'Finance'],
- packages = find_packages(),
+ packages=find_packages(),
  install_requires=[
          'wheel',
          'beautifulsoup4',
@@ -25,5 +25,5 @@ setup(
          'pandas',
          'datetime',
          'requests',
-     ], 
+     ],
 )

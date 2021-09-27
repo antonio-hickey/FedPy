@@ -1,690 +1,76 @@
-"""
-soma.py : System Open Market Operations portfolio
-
-Sourced: New York Federal Reserve (https://markets.newyorkfed.org)
-
-Output Data:
-    - Total Current SOMA Holdings
-        - Bill holdings
-        - Note & Bond holdings
-        - TIPS holdings
-        - FRN holdings
-        - Agency Debts holdings
-        - CMBS holdings
-    - Historical SOMA Holdings
-        - Bill holdings
-        - Note & Bond holdings
-        - TIPS holdings
-        - FRN holdings
-        - Agency Debts holdings
-        - CMBS holdings
- 
-"""
-
-# Import Modules
-from .utils.date_handler import DatesHandler as datesHand
-from bs4 import BeautifulSoup as bs
-import requests as req
 import pandas as pd
+import requests as req
+from bs4 import BeautifulSoup as bs
+from scripts.SOMA import get_data
+from util.SOMA import links
+
 
 class SOMA:
-    
-    """
-       Output's a dictionary summary
-       of the current SOMA portfolio.
-    """
-    def Summary() -> dict:
+    """ System Open Market Operations Portfolio Methods
+        Sourced: New York Federal Reserve (https://markets.newyorkfed.org) """
+    def __init__(self) -> None:
+        self.summary_url = links.Create().summary()
+        self.summary_response = req.get(self.summary_url)
+        self.summary_parsed = bs(self.summary_response.content, "lxml")
+        self.summary_data = self.summary_parsed.find("summary")
 
-        """ 
-            Dynamic URL to always get most recent data
-        """
-        today = datesHand.today().date()
-        
-        # If today is before Thursday use last weeks URL
-        if today.weekday() < 3:
-            last_wednesday = datesHand.last_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=summary&format=xml"
-
-        
-        # If today is Thursday
-        if today.weekday() == 3:
-            
-            # If the time is past 5:00 pm use yesterday's URL
-            if int(datesHand.time()[:2]) >= 17:
-                this_wednesday = datesHand.this_weekday(today,2)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=summary&format=xml"
-            
-            # If before 5:00 pm use last weeks URL
-            else:
-                last_wednesday = datesHand.last_weekday(today,2)
-                print(last_wednesday)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=summary&format=xml"
-        
-        # If today is past Thursday use this weeks URL
-        if today.weekday() > 3:
-            this_wednesday = datesHand.this_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=summary&format=xml"
- 
-        
-        # Making Soup
-        page = req.get(URL) # Request Page
-        soup = bs(page.content,"lxml") # Parse page as XML
-
-        date = []
-        mbs = []
-        cmbs = []
-        tips = []
-        frn = []
-        tips_infcomp = []
-        nb = []
-        bills = []
-        agencies = []
-        total = []
-
-
-        summary = soup.find("summary")    
-        date = summary.find("asofdate").text
-        mbs = summary.find("mbs").text
-        cmbs = summary.find("cmbs").text
-        tips = summary.find("tips").text
-        frn = summary.find("frn").text
-        tips_infcomp = summary.find("tipsinflationcompensation").text
-        notes_bonds = summary.find("notesbonds").text
-        bills = summary.find("bills").text
-        agencies = summary.find("agencies").text
-        total = summary.find("total").text
-
-        d = {
-            'Date': date,
-            'Total': total,
-            'Bills': bills,
-            'Notes & Bonds': notes_bonds,
-            'TIPS': tips,
-            'FRNs': frn,
-            'CMBS': cmbs,
-            'MBS': mbs,
-            'Agencies': agencies,
+    def summary(self) -> dict:
+        """ Output's a dictionary summary
+            of the current SOMA portfolio. """
+        return {
+            "Date": self.summary_data.find("asofdate").text,
+            "Total": self.summary_data.find("total").text,
+            "Bills": self.summary_data.find("bills").text,
+            "Notes & Bonds": self.summary_data.find("notesbonds").text,
+            "TIPS": self.summary_data.find("tips").text,
+            "FRN": self.summary_data.find("frn").text,
+            "CMBS": self.summary_data.find("cmbs").text,
+            "MBS": self.summary_data.find("mbs").text,
+            "Agencies": self.summary_data.find("agencies").text,
         }
 
-        return d
+    def hist(self) -> pd.DataFrame:
+        """ Output's a dictionary summary
+            of the historic SOMA portfolio. """
+        return pd.read_csv(links.SOMA_HIST)
 
-    """
-       Output's a float of the
-       total current SOMA portfolio. 
-    """
-    def Total() -> float:
+    def total(self) -> float:
+        """ Output's a float of the Total
+            current SOMA portfolio. """
+        return float(self.summary_data.find("total").text)
 
-        """ 
-            Dynamic URL to always get most recent data
-        """
-        today = datesHand.today().date()
-        
-        # If today is before Thursday use last weeks URL
-        if today.weekday() < 3:
-            last_wednesday = datesHand.last_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=summary&format=xml"
+    def bills(self) -> pd.DataFrame:
+        """ Outputs a DataFrame of current
+            SOMA portfolio bills holdings. """
+        url = links.Create().current_holdings("bills")
+        return get_data.Holdings(url).bills_data()
 
-        
-        # If today is Thursday
-        if today.weekday() == 3:
-            
-            # If the time is past 5:00 pm use yesterday's URL
-            if int(datesHand.time()[:2]) >= 17:
-                this_wednesday = datesHand.this_weekday(today,2)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=summary&format=xml"
-            
-            # If before 5:00 pm use last weeks URL
-            else:
-                last_wednesday = datesHand.last_weekday(today,2)
-                print(last_wednesday)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=summary&format=xml"
-        
-        # If today is past Thursday use this weeks URL
-        if today.weekday() > 3:
-            this_wednesday = datesHand.this_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=summary&format=xml"
- 
-        
-        # Making Soup
-        page = req.get(URL) # Request Page
-        soup = bs(page.content,"lxml") # Parse page as XML
+    def notes_bonds(self) -> pd.DataFrame:
+        """ Outputs a DataFrame of current
+            SOMA notes & bonds holdings. """
+        url = links.Create().current_holdings("notesbonds")
+        return get_data.Holdings(url).notesbonds_data()
 
-        summary = soup.find("summary")    
-        total = summary.find("total").text
+    def tips(self) -> pd.DataFrame:
+        """ Outputs a DataFrame of current
+            SOMA portfolio TIPS holdings. """
+        url = links.Create().current_holdings("tips")
+        return get_data.Holdings(url).tips_data()
 
-        return float(total)
+    def cmbs(self) -> pd.DataFrame:
+        """ Outputs a DataFrame of current
+            SOMA portfolio CMBS holdings. """
+        url = links.Create().current_holdings("cmbs")
+        return get_data.Holdings(url).cmbs_data()
 
+    def frn(self) -> pd.DataFrame:
+        """ Outputs a DataFrame of current
+            SOMA portfolio FRN holdings. """
+        url = links.Create().current_holdings("frn")
+        return get_data.Holdings(url).frn_data()
 
-        
-    """
-       Outputs a DataFrame of 
-       current SOMA bill holdings.
-    """
-    def Bills() -> pd.DataFrame:
-
-        """ 
-            Dynamic URL to always get most recent data
-        """
-        today = datesHand.today().date()
-        
-        # If today is before Thursday use last weeks URL
-        if today.weekday() < 3:
-            last_wednesday = datesHand.last_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-
-        
-        # If today is Thursday
-        if today.weekday() == 3:
-            
-            # If the time is past 5:00 pm use yesterday's URL
-            if int(datesHand.time()[:2]) >= 17:
-                this_wednesday = datesHand.this_weekday(today,2)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-            
-            # If before 5:00 pm use last weeks URL
-            else:
-                last_wednesday = datesHand.last_weekday(today,2)
-                print(last_wednesday)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-        
-        # If today is past Thursday use this weeks URL
-        if today.weekday() > 3:
-            this_wednesday = datesHand.this_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
- 
-        
-        # Making Soup
-        page = req.get(URL) # Request Page
-        soup = bs(page.content,"lxml") # Parse page as XML
-
-        # Null Lists
-        b_date = []
-        b_maturity = []
-        b_cusip = []
-        b_percout = []
-        b_parvalue = []
-        b_cfpw = []
-        b_sectype = []
-
-        # Each Holding in portfolio
-        holdings = soup.findAll("holding")
-        
-        # For each holding in holdings
-        for i in range(len(holdings)):
-
-            # Define what type of security it is
-            security = holdings[i].find("securitytype").text
-            
-            # If security is a bill then...
-            if security == "Bills":
-                b_date.append(holdings[i].find("asofdate").text)
-                b_maturity.append(holdings[i].find("maturitydate").text)
-                b_cusip.append(holdings[i].find("cusip").text)
-                b_percout.append(holdings[i].find("percentoutstanding").text)
-                b_parvalue.append(holdings[i].find("parvalue").text)
-                b_cfpw.append(holdings[i].find("changefrompriorweek").text) 
-                b_sectype.append("Bills")
-            
-
-        # Bills Dictionary
-        bills_d = {
-            'date': b_date,
-            'security type': b_sectype,
-            'maturity date': b_maturity,
-            'cusip': b_cusip,
-            'percent outstanding': b_percout,
-            'change from prior week': b_cfpw, 
-        }
-
-        # Render Pandas DataFrame
-        df = pd.DataFrame(bills_d)
-
-        # Return the DataFrame
-        return df
-
-    """
-       Outputs a DataFrame of current 
-       SOMA notes & bobnds holdings.
-    """
-    def NotesBonds() -> pd.DataFrame:
-
-        """ 
-            Dynamic URL to always get most recent data
-        """
-        today = datesHand.today().date()
-        
-        # If today is before Thursday use last weeks URL
-        if today.weekday() < 3:
-            last_wednesday = datesHand.last_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-
-        
-        # If today is Thursday
-        if today.weekday() == 3:
-            
-            # If the time is past 5:00 pm use yesterday's URL
-            if int(datesHand.time()[:2]) >= 17:
-                this_wednesday = datesHand.this_weekday(today,2)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-            
-            # If before 5:00 pm use last weeks URL
-            else:
-                last_wednesday = datesHand.last_weekday(today,2)
-                print(last_wednesday)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-        
-        # If today is past Thursday use this weeks URL
-        if today.weekday() > 3:
-            this_wednesday = datesHand.this_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
- 
-        
-        # Making Soup
-        page = req.get(URL) # Request Page
-        soup = bs(page.content,"lxml") # Parse page as XML
-
-        # Null Lists
-        nb_date = []
-        nb_maturity = []
-        nb_cusip = []
-        nb_coupon = []
-        nb_percout = []
-        nb_parvalue = []
-        nb_cfpw = []
-        nb_sectype = []
-
-        # Each Holding in portfolio
-        holdings = soup.findAll("holding")
-        
-        # For each holding in holdings
-        for i in range(len(holdings)):
-
-            # Define what type of security it is
-            security = holdings[i].find("securitytype").text
-            
-            # If security is a bill then...
-            if security == "NotesBonds":
-                nb_date.append(holdings[i].find("asofdate").text)
-                nb_maturity.append(holdings[i].find("maturitydate").text)
-                nb_cusip.append(holdings[i].find("cusip").text)
-                nb_coupon.append(holdings[i].find("coupon").text)
-                nb_percout.append(holdings[i].find("percentoutstanding").text)
-                nb_parvalue.append(holdings[i].find("parvalue").text)
-                nb_cfpw.append(holdings[i].find("changefrompriorweek").text) 
-                nb_sectype.append("Notes & Bonds")
-            
-
-        # Bills Dictionary
-        nb_d = {
-            'date': nb_date,
-            'security type': nb_sectype,
-            'maturity date': nb_maturity,
-            'cusip': nb_cusip,
-            'coupon': nb_coupon,
-            'percent outstanding': nb_percout,
-            'change from prior week': nb_cfpw, 
-        }
-
-        # Render Pandas DataFrame
-        df = pd.DataFrame(nb_d)
-
-        # Return the DataFrame
-        return df
-
-    """
-       Outputs a DataFrame of current 
-       SOMA TIPS holdings.
-    """
-    def TIPS() -> pd.DataFrame:
-
-        """ 
-            Dynamic URL to always get most recent data
-        """
-        today = datesHand.today().date()
-        
-        # If today is before Thursday use last weeks URL
-        if today.weekday() < 3:
-            last_wednesday = datesHand.last_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-
-        
-        # If today is Thursday
-        if today.weekday() == 3:
-            
-            # If the time is past 5:00 pm use yesterday's URL
-            if int(datesHand.time()[:2]) >= 17:
-                this_wednesday = datesHand.this_weekday(today,2)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-            
-            # If before 5:00 pm use last weeks URL
-            else:
-                last_wednesday = datesHand.last_weekday(today,2)
-                print(last_wednesday)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-        
-        # If today is past Thursday use this weeks URL
-        if today.weekday() > 3:
-            this_wednesday = datesHand.this_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
- 
-        
-        # Making Soup
-        page = req.get(URL) # Request Page
-        soup = bs(page.content,"lxml") # Parse page as XML
-
-        # Null Lists
-        tips_date = []
-        tips_maturity = []
-        tips_cusip = []
-        tips_coupon = []
-        tips_percout = []
-        tips_parvalue = []
-        tips_infcomp = []
-        tips_cfpw = []
-        tips_sectype = []
-
-        # Each Holding in portfolio
-        holdings = soup.findAll("holding")
-        
-        # For each holding in holdings
-        for i in range(len(holdings)):
-
-            # Define what type of security it is
-            security = holdings[i].find("securitytype").text
-            
-            # If security is a bill then...
-            if security == "TIPS":
-                tips_date.append(holdings[i].find("asofdate").text)
-                tips_maturity.append(holdings[i].find("maturitydate").text)
-                tips_cusip.append(holdings[i].find("cusip").text)
-                tips_coupon.append(holdings[i].find("coupon").text)
-                tips_percout.append(holdings[i].find("percentoutstanding").text)
-                tips_infcomp.append(holdings[i].find("inflationcompensation").text)
-                tips_parvalue.append(holdings[i].find("parvalue").text)
-                tips_cfpw.append(holdings[i].find("changefrompriorweek").text) 
-                tips_sectype.append("TIPS")
-            
-
-        # Bills Dictionary
-        tips_d = {
-            'date': tips_date,
-            'security type': tips_sectype,
-            'maturity date': tips_maturity,
-            'cusip': tips_cusip,
-            'coupon': tips_coupon,
-            'percent outstanding': tips_percout,
-            'inflation compensation': tips_infcomp,
-            'change from prior week': tips_cfpw, 
-        }
-
-        # Render Pandas DataFrame
-        df = pd.DataFrame(tips_d)
-
-        # Return the DataFrame
-        return df
-
-    """
-       Outputs a DataFrame of current 
-       SOMA FRNs holdings.
-    """
-    def FRNs() -> pd.DataFrame:
-
-        """ 
-            Dynamic URL to always get most recent data
-        """
-        today = datesHand.today().date()
-        
-        # If today is before Thursday use last weeks URL
-        if today.weekday() < 3:
-            last_wednesday = datesHand.last_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-
-        
-        # If today is Thursday
-        if today.weekday() == 3:
-            
-            # If the time is past 5:00 pm use yesterday's URL
-            if int(datesHand.time()[:2]) >= 17:
-                this_wednesday = datesHand.this_weekday(today,2)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-            
-            # If before 5:00 pm use last weeks URL
-            else:
-                last_wednesday = datesHand.last_weekday(today,2)
-                print(last_wednesday)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-        
-        # If today is past Thursday use this weeks URL
-        if today.weekday() > 3:
-            this_wednesday = datesHand.this_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
- 
-        
-        # Making Soup
-        page = req.get(URL) # Request Page
-        soup = bs(page.content,"lxml") # Parse page as XML
-
-        # Null Lists
-        frn_date = []
-        frn_maturity = []
-        frn_cusip = []
-        frn_spread = []
-        frn_percout = []
-        frn_parvalue = []
-        frn_cfpw = []
-        frn_sectype = []
-
-        # Each Holding in portfolio
-        holdings = soup.findAll("holding")
-        
-        # For each holding in holdings
-        for i in range(len(holdings)):
-
-            # Define what type of security it is
-            security = holdings[i].find("securitytype").text
-            
-            # If security is a bill then...
-            if security == "FRNs":
-                frn_date.append(holdings[i].find("asofdate").text)
-                frn_maturity.append(holdings[i].find("maturitydate").text)
-                frn_cusip.append(holdings[i].find("cusip").text)
-                frn_spread.append(holdings[i].find("spread").text)
-                frn_percout.append(holdings[i].find("percentoutstanding").text)
-                frn_parvalue.append(holdings[i].find("parvalue").text)
-                frn_cfpw.append(holdings[i].find("changefrompriorweek").text) 
-                frn_sectype.append("FRNs")
-            
-
-        # Bills Dictionary
-        frn_d = {
-            'date': frn_date,
-            'security type': frn_sectype,
-            'maturity date': frn_maturity,
-            'cusip': frn_cusip,
-            'spread': frn_spread,
-            'percent outstanding': frn_percout,
-            'change from prior week': frn_cfpw, 
-        }
-
-        # Render Pandas DataFrame
-        df = pd.DataFrame(frn_d)
-
-        # Return the DataFrame
-        return df
-
-    """
-       Outputs a DataFrame of current 
-       SOMA Agency Debts holdings.
-    """
-    def AgencyDebts() -> pd.DataFrame:
-
-        """ 
-            Dynamic URL to always get most recent data
-        """
-        today = datesHand.today().date()
-        
-        # If today is before Thursday use last weeks URL
-        if today.weekday() < 3:
-            last_wednesday = datesHand.last_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-
-        
-        # If today is Thursday
-        if today.weekday() == 3:
-            
-            # If the time is past 5:00 pm use yesterday's URL
-            if int(datesHand.time()[:2]) >= 17:
-                this_wednesday = datesHand.this_weekday(today,2)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-            
-            # If before 5:00 pm use last weeks URL
-            else:
-                last_wednesday = datesHand.last_weekday(today,2)
-                print(last_wednesday)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-        
-        # If today is past Thursday use this weeks URL
-        if today.weekday() > 3:
-            this_wednesday = datesHand.this_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
- 
-        
-        # Making Soup
-        page = req.get(URL) # Request Page
-        soup = bs(page.content,"lxml") # Parse page as XML
-
-        # Null Lists
-        ad_date = []
-        ad_maturity = []
-        ad_cusip = []
-        ad_issuer = []
-        ad_coupon = []
-        ad_parvalue = []
-        ad_cfpw = []
-        ad_sectype = []
-
-        # Each Holding in portfolio
-        holdings = soup.findAll("holding")
-        
-        # For each holding in holdings
-        for i in range(len(holdings)):
-
-            # Define what type of security it is
-            security = holdings[i].find("securitytype").text
-            
-            # If security is a bill then...
-            if security == "Agency Debts":
-                ad_date.append(holdings[i].find("asofdate").text)
-                ad_maturity.append(holdings[i].find("maturitydate").text)
-                ad_cusip.append(holdings[i].find("cusip").text)
-                ad_issuer.append(holdings[i].find("issuer").text)
-                ad_coupon.append(holdings[i].find("coupon").text)
-                ad_parvalue.append(holdings[i].find("parvalue").text)
-                ad_cfpw.append(holdings[i].find("changefrompriorweek").text) 
-                ad_sectype.append("Agency Debts")
-            
-
-        # Bills Dictionary
-        ad_d = {
-            'date': ad_date,
-            'security type': ad_sectype,
-            'maturity date': ad_maturity,
-            'cusip': ad_cusip,
-            'issuer': ad_issuer,
-            'coupon': ad_coupon,
-            'par value': ad_parvalue,
-            'change from prior week': ad_cfpw, 
-        }
-
-        # Render Pandas DataFrame
-        df = pd.DataFrame(ad_d)
-
-        # Return the DataFrame
-        return df
-
-    """
-       Outputs a DataFrame of current 
-       SOMA Agency Debts holdings.
-    """
-    def CMBS() -> pd.DataFrame:
-
-        """ 
-            Dynamic URL to always get most recent data
-        """
-        today = datesHand.today().date()
-        
-        # If today is before Thursday use last weeks URL
-        if today.weekday() < 3:
-            last_wednesday = datesHand.last_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-
-        
-        # If today is Thursday
-        if today.weekday() == 3:
-            
-            # If the time is past 5:00 pm use yesterday's URL
-            if int(datesHand.time()[:2]) >= 17:
-                this_wednesday = datesHand.this_weekday(today,2)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-            
-            # If before 5:00 pm use last weeks URL
-            else:
-                last_wednesday = datesHand.last_weekday(today,2)
-                print(last_wednesday)
-                URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={last_wednesday}&endDt={last_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
-        
-        # If today is past Thursday use this weeks URL
-        if today.weekday() > 3:
-            this_wednesday = datesHand.this_weekday(today,2)
-            URL = f"https://markets.newyorkfed.org/read?productCode=30&startDt={this_wednesday}&endDt={this_wednesday}&query=details&holdingTypes=bills,notesbonds,frn,tips,cmbs,agency%20debts&format=xml"
- 
-        
-        # Making Soup
-        page = req.get(URL) # Request Page
-        soup = bs(page.content,"lxml") # Parse page as XML
-
-        # Null Lists
-        cmbs_date = []
-        cmbs_cusip = []
-        cmbs_secdescrip = []
-        cmbs_facevalue = []
-        cmbs_sectype = []
-
-        # Each Holding in portfolio
-        holdings = soup.findAll("holding")
-        
-        # For each holding in holdings
-        for i in range(len(holdings)):
-
-            # Define what type of security it is
-            security = holdings[i].find("securitytype").text
-            
-            # If security is a bill then...
-            if security == "CMBS":
-                cmbs_date.append(holdings[i].find("asofdate").text)
-                cmbs_cusip.append(holdings[i].find("cusip").text)
-                cmbs_secdescrip.append(holdings[i].find("securitydescription").text)
-                cmbs_facevalue.append(holdings[i].find("currentfacevalue").text)
-                cmbs_sectype.append("CMBS")
-            
-
-        # Bills Dictionary
-        cmbs_d = {
-            'date': cmbs_date,
-            'security type': cmbs_sectype,
-            'security description': cmbs_secdescrip,
-            'cusip': cmbs_cusip,
-            'par value': cmbs_facevalue, 
-        }
-
-        # Render Pandas DataFrame
-        df = pd.DataFrame(cmbs_d)
-
-        # Return the DataFrame
-        return df
-
-    def Hist() -> pd.DataFrame:
-        df = pd.read_csv('https://raw.githubusercontent.com/antonio-hickey/FedPy/main/FedPy/data/soma_historical.csv')
-        return df
-
-    
+    def agency_debts(self) -> pd.DataFrame:
+        """ Outputs a DataFrame of current SOMA
+            portfolio Agency Debt holdings. """
+        url = links.Create().current_holdings("agency debts")
+        return get_data.Holdings(url).agencydebts_data()

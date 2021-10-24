@@ -2,6 +2,8 @@ import pandas as pd
 import requests as req
 from bs4 import BeautifulSoup as bs
 
+from FedPy.Payment_Systems import util
+
 
 class ACH:
     def __init__(self) -> None:
@@ -9,6 +11,7 @@ class ACH:
         self.govt_url = "https://www.federalreserve.gov/paymentsystems/fedach_yearlygovt.htm"
 
     def get_data(self, url: str = "") -> list:
+        """Helper method to fetch data."""
         if url == "":
             url = self.comm_url
         response = bs(req.get(url).content, "lxml").find("div", {"class": "container container__main"})
@@ -19,6 +22,7 @@ class ACH:
         return [columns, years, rows]
 
     def get_all_format(self, url: str) -> list:
+        """helper method to fetch data for all method."""
         response = bs(req.get(url).content, "lxml").find("div", {"class": "container container__main"})
         columns = [(i.text).replace('\n', ' ').replace('\t', '') for i in response.findAll("th")]
         years = [i.text for i in response.findAll("td", {"class": "left"})]
@@ -26,24 +30,25 @@ class ACH:
         rows = [data[i:i+7] for i in range(0, len(data), 7)]
         return [columns, years, rows]
 
-    def to_DataFrame(self, data: list) -> pd.DataFrame:
-        for idx in enumerate(data[1]):
-            data[2][idx[0]].insert(0, idx[1])
-        return pd.DataFrame(columns=data[0], data=data[2])
-
     def commercial(self) -> pd.DataFrame:
+        """Outputs DataFrame of Commercial ACH data."""
         url = self.comm_url
         data = self.get_data(url)
-        return self.to_DataFrame(data)
+        return util.to_DataFrame(data)
 
     def government(self) -> pd.DataFrame:
+        """Outputs DataFrame of Government ACH data."""
         url = self.govt_url
         data = self.get_data(url)
-        return self.to_DataFrame(data)
+        return util.to_DataFrame(data)
 
     def all(self) -> pd.DataFrame:
-        comm = self.to_DataFrame(self.get_all_format(self.comm_url))
-        govt = self.to_DataFrame(self.get_all_format(self.govt_url))
+        """
+        Outputs DataFrame of Commercial and
+        Government ACH data combined.
+        """
+        comm = util.to_DataFrame(self.get_all_format(self.comm_url))
+        govt = util.to_DataFrame(self.get_all_format(self.govt_url))
 
         df = pd.DataFrame()
         df[comm.columns[0]] = comm[comm.columns[0]]

@@ -2,14 +2,10 @@ import pandas as pd
 import requests as req
 from bs4 import BeautifulSoup as bs
 
+from FedPy.Payment_Systems import util
+
 
 class Currency:
-    def to_DataFrame(self, data: list) -> pd.DataFrame:
-        """Helper method to convert data to DataFrame"""
-        for idx in enumerate(data[1]):
-            data[2][idx[0]].insert(0, idx[1])
-        return pd.DataFrame(columns=data[0], data=data[2])
-
     def ic_get_data(self, url: str) -> list:
         """
         Helper method to get data for
@@ -37,7 +33,7 @@ class Currency:
         else:
             raise ValueError("Invalid pass of _type: {_type}, Please choose value or volume.")
         data = self.ic_get_data(url)
-        return self.to_DataFrame(data)
+        return util.to_DataFrame(data)
 
     def pc_get_data(self, url: str) -> list:
         """
@@ -58,7 +54,7 @@ class Currency:
         """
         url = "https://www.federalreserve.gov/paymentsystems/coin_costnewcurr.htm"
         data = self.pc_get_data(url)
-        return self.to_DataFrame(data)
+        return util.to_DataFrame(data)
 
     def operation_expenses(self) -> pd.DataFrame:
         """
@@ -69,9 +65,10 @@ class Currency:
         """
         url = "https://www.federalreserve.gov/paymentsystems/coin_expcashops.htm"
         data = self.pc_get_data(url)
-        return self.to_DataFrame(data)
+        return util.to_DataFrame(data)
 
     def payments_get_data(self, url: str) -> pd.DataFrame:
+        """Helper method to get data for payments."""
         response = bs(req.get(url).content, "lxml").find("div", {"class": "data-table"})
         columns = [(i.text).replace('\n', ' ').replace('\t', '') for i in response.findAll("th", {"scope": "col"})]
         years = [i.text for i in response.findAll("td", {"class": "left"})]
@@ -94,7 +91,7 @@ class Currency:
         else:
             raise ValueError("Invalid pass of _type: {_type}, Please choose value or volume.")
         data = self.payments_get_data(url)
-        return self.to_DataFrame(data)
+        return util.to_DataFrame(data)
 
     def reciepts(self, _type: str = "val") -> pd.DataFrame:
         """
@@ -108,4 +105,4 @@ class Currency:
         else:
             raise ValueError("Invalid pass of _type: {_type}, Please choose value or volume.")
         data = self.payments_get_data(url)
-        return self.to_DataFrame(data)
+        return util.to_DataFrame(data)

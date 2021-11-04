@@ -15,7 +15,8 @@ class Currency:
         columns = [(i.text).replace('\n', ' ').replace('\t', '') for i in response.findAll("th", {"scope": "col"})]
         years = [i.text for i in response.findAll("td", {"class": "left"})]
         if "value" in url:
-            data = [i.text.replace(',', '').replace('.', '') + "000000000" for i in response.findAll("td", {"class": "left2"})]
+            data = [i.text.replace(',', '').replace('.', '') + "000000000" if "$0" not in i.text else
+                    i.text.replace(',', '').replace('0.', '') + "000000000" for i in response.findAll("td", {"class": "left2"})]
         else:
             data = [i.text.replace(',', '') for i in response.findAll("td", {"class": "left2"})]
         rows = [data[i:i+9] for i in range(0, len(data), 9)]

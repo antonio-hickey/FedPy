@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 classifiers = [
-    'Development Status :: 2 - Pre-Alpha',
+    'Development Status :: 2 - Alpha',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 3',
 ]

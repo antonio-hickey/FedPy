@@ -9,7 +9,7 @@ class Statements:
     """Methods for FOMC Statements"""
 
     def __init__(self, dates: Union[str, list, None] = None) -> None:
-        self.url_base = "http://127.0.0.1:5000/fed/get-fomc-statement/"
+        self.url_base = "http://18.220.119.101:8080/fed/get-fomc-statement/"
         self.dates = dates
 
     def make_endpoint_query(self) -> str:

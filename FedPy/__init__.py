@@ -4,7 +4,7 @@ import pandas as pd
 
 from .FOMC_Statement.statements import Statements  # noqa
 from .FRED.fred import Fred
-from .SOMA.soma import SOMA  # noqa
+from .SOMA_Portfolio.soma import SOMA  # noqa
 from .TOMO.tomo import TOMO  # noqa
 
 

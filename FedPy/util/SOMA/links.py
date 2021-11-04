@@ -18,16 +18,16 @@ class Create:
         link_end = "&query=summary&format=json"
         return self.date_context() + link_end
 
-    def holdings(self, security_type: Union[str, list]) -> str:
+    def holdings(self, security_type: Union[str, list[str]]) -> str:
         """
         Method to get holding details on specific types
         of securities in the SOMA portfolio.
         """
         if isinstance(security_type, str):
-            return self.date_context() + f"&query=details&holdingTypes={security_type}&format=json"
+            return (self.date_context() + f"&query=details&holdingTypes={security_type}&format=json")
         else:
-            security_types = ','.join(security_type)
-            return self.date_context() + f"&query=details&holdingTypes={security_types}&format=json"
+            security_types: str = ','.join(security_type)
+            return (self.date_context() + f"&query=details&holdingTypes={security_types}&format=json")
 
     def date_context(self) -> str:
         """

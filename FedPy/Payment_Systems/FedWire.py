@@ -25,7 +25,7 @@ class FedWire:
     def get_data(self, url: str) -> list:
         """Helper method to fetch data from frbservices."""
         response = bs(req.get(url).content, "lxml").find("div", {"id": "content"})
-        columns = [(i.text).replace('\n', ' ').replace('\r', '').replace('               ', '')
+        columns = [(i.text).replace('\n', ' ').replace('\r', '').replace('               ', '').replace('1', ' ').replace('2', ' ')
                    for i in response.findAll("th", {"scope": "col"})]
         years = [i.text for i in response.findAll("th", {"scope": "row"})]
         data = [i.text for i in response.findAll("td")]

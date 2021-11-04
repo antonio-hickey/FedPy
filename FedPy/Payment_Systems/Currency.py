@@ -31,7 +31,7 @@ class Currency:
         elif _type in ["volume", "Volume", "vol", "Vol"]:
             url = "https://www.federalreserve.gov/paymentsystems/coin_currcircvolume.htm"
         else:
-            raise ValueError("Invalid pass of _type: {_type}, Please choose value or volume.")
+            raise ValueError(f"Invalid pass of type: {_type}, Please choose value or volume.")
         data = self.ic_get_data(url)
         return util.to_DataFrame(data)
 
@@ -89,7 +89,7 @@ class Currency:
         elif _type in ["volume", "Volume", "vol", "Vol"]:
             url = "https://www.federalreserve.gov/paymentsystems/coin_paycurrcircvolume.htm"
         else:
-            raise ValueError("Invalid pass of _type: {_type}, Please choose value or volume.")
+            raise ValueError(f"Invalid pass of type: {_type}, Please choose value or volume.")
         data = self.payments_get_data(url)
         return util.to_DataFrame(data)
 
@@ -103,6 +103,6 @@ class Currency:
         elif _type in ["volume", "Volume", "vol", "Vol"]:
             url = "https://www.federalreserve.gov/paymentsystems/coin_reccurrcircvolume.htm"
         else:
-            raise ValueError("Invalid pass of _type: {_type}, Please choose value or volume.")
+            raise ValueError(f"Invalid pass of type: {_type}, Please choose value or volume.")
         data = self.payments_get_data(url)
         return util.to_DataFrame(data)

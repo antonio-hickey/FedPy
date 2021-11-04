@@ -16,7 +16,7 @@ class ACH:
             url = self.comm_url
         response = bs(req.get(url).content, "lxml").find("div", {"class": "container container__main"})
         columns = [(i.text).replace('\n', ' ').replace('\t', '') for i in response.findAll("th")]
-        years = [i.text for i in response.findAll("td", {"class": "left"})]
+        years = [i.text if len(i.text) == 4 else i.text[1:5] for i in response.findAll("td", {"class": "left"})]
         data = [i.text.replace(',', '') for i in response.findAll("td", {"class": "left2"})]
         rows = [data[i:i+7] for i in range(0, len(data), 7)]
         return [columns, years, rows]

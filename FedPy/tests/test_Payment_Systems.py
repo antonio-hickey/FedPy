@@ -296,7 +296,7 @@ class Test_Currency(TestCase):
             patched.assert_called_with('https://www.federalreserve.gov/paymentsystems/coin_paycurrcircvalue.htm')
             self.assertIsInstance(result, pd.DataFrame)
 
-    def test_reciepts(self) -> None:
+    def test_receipts(self) -> None:
         with mock.patch('FedPy.Payment_Systems.Currency.Currency.payments_get_data') as patched:
             patched.return_value = [
                 ['Year', '$1', '$2', '$5', '$10', '$20', '$50', '$100', 'Total'],
@@ -305,7 +305,7 @@ class Test_Currency(TestCase):
                  ['$10.8', '$0.2', '$16.1', '$17.1', '$293.2', '$78.9', '$367.7', '$784.1'],
                  ['$11.3', '$0.2', '$16.6', '$17.0', '$302.9', '$75.4', '$369.2', '$792.6']],
             ]
-            result = Currency().reciepts("val")
+            result = Currency().receipts("val")
             patched.assert_called_with('https://www.federalreserve.gov/paymentsystems/coin_reccurrcircvalue.htm')
             self.assertIsInstance(result, pd.DataFrame)
 
@@ -316,7 +316,7 @@ class Test_Currency(TestCase):
                  ['10.5', '0.0', '3.1', '1.6', '14.6', '1.5', '2.9', '34.2'],
                  ['11.0', '0.0', '3.2', '1.7', '14.9', '1.5', '2.8', '35.0']],
             ]
-            result = Currency().reciepts("vol")
+            result = Currency().receipts("vol")
             patched.assert_called_with('https://www.federalreserve.gov/paymentsystems/coin_reccurrcircvolume.htm')
             self.assertIsInstance(result, pd.DataFrame)
 

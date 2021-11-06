@@ -3,10 +3,7 @@
 
 <img src=https://github.com/antonio-hickey/FedPy/blob/main/FedPy_logo.png/>
 
-Open source python library for pulling data related to Federal Reserve.
-
-Depending on the data you're trying to access FedPy will
-return a `pandas DataFrame`, `Dictionary`, or a `float`.
+Open source python library for quickly and seamlessly pulling data related to the Federal Reserve.
 
 ## Installation:
 Install using pip:
@@ -15,6 +12,10 @@ Install using pip:
 ```sh
 pip install FedPy
 ```
+
+
+## [Documentation](https://antonio-hickey.github.io/FedPy.Docs/):
+Check out the [Documentation](https://antonio-hickey.github.io/FedPy.Docs/) for more in depth usage!
 
 ## Basic Example Usage:
 ```
@@ -37,6 +38,3 @@ changeFromPriorWeek                     0                   0                   
 changeFromPriorYear                                                                ...
 securityType                        Bills               Bills               Bills  ...               Bills               Bills               Bills
 ```
-
-## [Documentation](https://antonio-hickey.github.io/FedPy.Docs/):
-Check out the [Documentation](https://antonio-hickey.github.io/FedPy.Docs/) for more in depth usage!

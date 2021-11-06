@@ -28,7 +28,7 @@ class FedWire:
         columns = [(i.text).replace('\n', ' ').replace('\r', '').replace('               ', '').replace('1', ' ').replace('2', ' ')
                    for i in response.findAll("th", {"scope": "col"})]
         years = [i.text for i in response.findAll("th", {"scope": "row"})]
-        data = [i.text for i in response.findAll("td")]
+        data = [i.text if len((i.text).split(",")[-1]) == 3 else i.text[:-1] for i in response.findAll("td")]
 
         if 'securities' in url:
             rows = [data[i:i+8] for i in range(0, len(data), 8)]

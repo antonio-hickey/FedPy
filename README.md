@@ -1,6 +1,8 @@
 # FedPy
 ## _Everything Federal Reserve Related_
 
+<img src=https://github.com/antonio-hickey/FedPy/blob/main/FedPy_logo.png/>
+
 Open source python library for pulling data related to Federal Reserve.
 
 Depending on the data you're trying to access FedPy will

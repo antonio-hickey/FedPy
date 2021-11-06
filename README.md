@@ -36,4 +36,5 @@ changeFromPriorYear                                                             
 securityType                        Bills               Bills               Bills  ...               Bills               Bills               Bills
 ```
 
+## [Documentation](https://antonio-hickey.github.io/FedPy.Docs/):
 Check out the [Documentation](https://antonio-hickey.github.io/FedPy.Docs/) for more in depth usage!

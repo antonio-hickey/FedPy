@@ -30,7 +30,20 @@ Change Log
   via pre-commit.
 - Added Type Hints
 - Refactored Codebase
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 - Added Feature for pulling data
   on Payment Services.
 - Added data on Fed TOMO activities
   (Repo Operation's, Reverse Repo Operation's)
+<<<<<<< Updated upstream
+=======
+
+1.1.7 (11/04/2021)
+------------------
+- Fixed parsing bugs for Payment System's
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes

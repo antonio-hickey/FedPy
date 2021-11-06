@@ -95,9 +95,9 @@ class Currency:
         data = self.payments_get_data(url)
         return util.to_DataFrame(data)
 
-    def reciepts(self, _type: str = "val") -> pd.DataFrame:
+    def receipts(self, _type: str = "val") -> pd.DataFrame:
         """
-        Outputs a DataFrame of reciepts of currency
+        Outputs a DataFrame of receipts of currency
         from circulation for either value or volume.
         """
         if _type in ["value", "Value", "val", "Val"]:

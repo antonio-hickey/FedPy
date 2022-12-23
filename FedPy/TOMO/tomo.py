@@ -35,11 +35,11 @@ class TOMO:
             key['data'] = sub_data
             self.hashmap[op_date] = key
 
-    def repo(self, asDict: bool = False) -> Union[pd.DataFrame, dict]:
+    def repo(self, as_dict: bool = False) -> Union[pd.DataFrame, dict]:
         """
         Method to return repo operation data as DataFrame.
 
-        asDict: If true returns data as dict, Defaults to False.
+        as_dict: If true returns data as dict, Defaults to False.
         """
         url = self.create_link("rp")
         self.get_data(url)
@@ -47,11 +47,11 @@ class TOMO:
             return self.hashmap
         return pd.DataFrame(self.hashmap)
 
-    def reverse_repo(self, asDict: bool = False) -> Union[pd.DataFrame, dict]:
+    def reverse_repo(self, as_dict: bool = False) -> Union[pd.DataFrame, dict]:
         """
         Method to return reverse repo operation data as DataFrame.
 
-        asDict: If true returns data as dict, Defaults to False.
+        as_dict: If true returns data as dict, Defaults to False.
         """
         url = self.create_link("rrp")
         self.get_data(url)

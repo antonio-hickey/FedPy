@@ -7,16 +7,16 @@ import requests as req
 
 def fomc_statement(
     dates: Union[str, list[str], None] = None,
-    asDict: bool = False,
+    as_dict: bool = False,
 ) -> Union[pd.DataFrame, dict]:
     """
     Get FOMC statements for given date or dates.
 
     `dates`: YYYY-MM-DD, or 'current', or 'previous'.
-    `asDict`: True or False, will return as dictionary if True.
+    `as_dict`: True or False, will return as dictionary if True.
     """
     url = make_endpoint_query(dates)
-    if asDict:
+    if as_dict:
         return to_dict(url)
     return to_DataFrame(url)
 

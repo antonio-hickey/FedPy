@@ -12,7 +12,7 @@ class Publications:
     def fomc_statement(
         self,
         dates: Union[str, list, None] = None,
-        asDict: bool = False,
+        as_dict: bool = False,
     ) -> Union[pd.DataFrame, dict]:
         """
         Get FOMC statements for given date or dates
@@ -20,4 +20,4 @@ class Publications:
         `dates`: YYYY-MM-DD, or 'current', or 'previous'
         `asDict`: True or False, will return as dictionary if True.
         """
-        return fomc_statement(dates, asDict)
+        return fomc_statement(dates, as_dict)

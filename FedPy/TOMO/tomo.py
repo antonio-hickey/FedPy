@@ -43,7 +43,7 @@ class TOMO:
         """
         url = self.create_link("rp")
         self.get_data(url)
-        if asDict:
+        if as_dict:
             return self.hashmap
         return pd.DataFrame(self.hashmap)
 
@@ -55,6 +55,6 @@ class TOMO:
         """
         url = self.create_link("rrp")
         self.get_data(url)
-        if asDict:
+        if as_dict:
             return self.hashmap
         return pd.DataFrame(self.hashmap)

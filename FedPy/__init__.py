@@ -11,9 +11,14 @@ from FedPy.Payment_Systems.National_Settlement_Service import NSS  # noqa
 from FedPy.publications.publications import Publications  # noqa
 from FedPy.SOMA_Portfolio.soma import SOMA  # noqa
 from FedPy.TOMO.tomo import TOMO  # noqa
+from FedPy.web_client import ClientSession
 
 
 def FRED(key: str, series_id: str, start: Optional[str] = None,
          end: Optional[str] = None) -> pd.Series:
     fred = Fred(api_key=key)
     return fred.get_series(series_id, start=start, end=end)
+
+
+SESSION = ClientSession()
+SOMA = SOMA(SESSION)

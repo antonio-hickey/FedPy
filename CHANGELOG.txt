@@ -45,3 +45,8 @@ Change Log
 - Refactored TOMO design.
 - Refactored fomc_statements.
 - Created documentation webpage.
+
+1.1.9 (TBD)
+-----------------
+- Updated README.
+- Removed logo .png image.
